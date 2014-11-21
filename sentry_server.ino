@@ -106,8 +106,8 @@ const int EN2=6; //Half Bridge 1 Enable   // 10
 const int MC1=A5; //Motor Control 1        // 3
 const int MC2=A4; //Motor Control 2        // 2
 
-const int MC3=7; //Motor Control 1        // 4
-const int MC4=8; //Motor Control 2        // 5
+const int MC3=A3; //Motor Control 1        // 4  // change from 7 to A3
+const int MC4=A2; //Motor Control 2        // 5  // change from 8 to A2
 
 /////////////////////////////////////////////////
 
@@ -118,7 +118,6 @@ const int MC4=8; //Motor Control 2        // 5
 void forward(int rate)
 {
   Serial.println(F("forward"));
-  //Serial.println(rate);
 
   digitalWrite(EN1, LOW);
   digitalWrite(MC1, HIGH);
@@ -155,14 +154,12 @@ void brake()
   digitalWrite(EN1, LOW);
   digitalWrite(MC1, LOW);
   digitalWrite(MC2, LOW);
- // analogWrite(EN1, HIGH);
-  digitalWrite(EN1, HIGH);
+  analogWrite(EN1, HIGH);
 
   digitalWrite(EN2, LOW);
   digitalWrite(MC3, LOW);
   digitalWrite(MC4, LOW);
- // analogWrite(EN2, HIGH);
-  digitalWrite(EN2, HIGH);
+  analogWrite(EN2, HIGH);
 }
 
 /////////////////////////////////////////////////
@@ -236,7 +233,7 @@ void loop(void)
   // Try to get a client which is connected.
   Adafruit_CC3000_ClientRef client = httpServer.available();
   if (client) {
-    Serial.println(F("Client connected."));
+  //  Serial.println(F("Client connected."));
     // Process this request until it completes or times out.
     // Note that this is explicitly limited to handling one request at a time!
 
