@@ -67,9 +67,22 @@
 
 Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ, ADAFRUIT_CC3000_VBAT,
                                          SPI_CLOCK_DIVIDER); // you can change this clock speed
-
-#define WLAN_SSID       "2WIRE365"   // cannot be longer than 32 characters!
+// Jake's house
+#define WLAN_SSID       "2WIRE365"  
 #define WLAN_PASS       "3159779514"
+
+// David's hotspot
+//#define WLAN_SSID       "sixShooter"  
+//#define WLAN_PASS       "bigwhiskey"
+
+// GA
+//#define WLAN_SSID       "GA-GUEST"  
+//#define WLAN_PASS       "yellowpencil"
+
+// david's house
+//#define WLAN_SSID       "net77"  
+//#define WLAN_PASS       "3236545454"
+
 // Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2
 #define WLAN_SECURITY   WLAN_SEC_WPA2
 
@@ -279,21 +292,18 @@ void loop(void)
      
 ////////////////// MOTOR LOOP ///////////////////
 
-         if (strcmp(path, "/0") == 0) {
-           client.fastrprintln(F("I'm alive."));
-           
-         } else if (strcmp(path, "/1") == 0) {
-           client.fastrprintln(F("I'm going forward."));
-           forward(255);
-           
-         } else if (strcmp(path, "/2") == 0) {
-           client.fastrprintln(F("I'm going backward."));
-           reverse(255);
-           
-         } else if (strcmp(path, "/3") == 0) {
-           client.fastrprintln(F("I'm stopping."));
-           brake();
-         }  
+       if (strcmp(path, "/0") == 0) {
+          client.fastrprintln(F("I'm alive.")); 
+       } else if (strcmp(path, "/1") == 0) {
+         client.fastrprintln(F("I'm going forward."));
+         forward(255);  
+       } else if (strcmp(path, "/2") == 0) {
+         client.fastrprintln(F("I'm going backward."));
+         reverse(255);  
+       } else if (strcmp(path, "/3") == 0) {
+         client.fastrprintln(F("I'm stopping."));
+         brake();
+       }  
  
 /////////////////////////////////////////////////
             
