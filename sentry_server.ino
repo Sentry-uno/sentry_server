@@ -129,6 +129,26 @@ void forward(int rate)
   digitalWrite(MC4, LOW);
   analogWrite(EN2, rate);
 }
+//Motor for left turn at given rate (from 0-255)
+void leftforward(int rate)
+{
+  Serial.println(F("forwardleft"));
+
+  digitalWrite(EN1, LOW);
+  digitalWrite(MC1, HIGH);
+  digitalWrite(MC2, LOW);
+  analogWrite(EN1, rate);
+}
+//Motor for right turn at given rate (from 0-255)
+void rightforward(int rate)
+{
+  Serial.println(F("forward"));
+
+  digitalWrite(EN2, LOW);
+  digitalWrite(MC3, HIGH);
+  digitalWrite(MC4, LOW);
+  analogWrite(EN2, rate);
+}
 
 //Motor goes backward at given rate (from 0-255)
 void reverse(int rate)
@@ -148,7 +168,7 @@ void reverse(int rate)
 
 //Stops Motor
 void brake()
-{	
+{ 
   Serial.println(F("brake"));
   
   digitalWrite(EN1, LOW);
@@ -293,6 +313,14 @@ void loop(void)
          } else if (strcmp(path, "/3") == 0) {
            client.fastrprintln(F("I'm stopping."));
            brake();
+         }  
+         else if (strcmp(path, "/4") == 0) {
+           client.fastrprintln(F("I'm going left & forward."));
+           leftforward(255);
+         }  
+         else if (strcmp(path, "/5") == 0) {
+           client.fastrprintln(F("I'm going right & forward."));
+           rightforward(255);
          }  
  
 /////////////////////////////////////////////////
