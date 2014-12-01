@@ -67,9 +67,15 @@
 
 Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ, ADAFRUIT_CC3000_VBAT,
                                          SPI_CLOCK_DIVIDER); // you can change this clock speed
+                                         
+///////////////// ENTER WIRELESS INFO //////////////////////                                                                                 
 // Jake's house
 #define WLAN_SSID       "2WIRE365"  
 #define WLAN_PASS       "3159779514"
+
+// David's house 
+//#define WLAN_SSID     "sausagefestival"  
+//#define WLAN_PASS     "upsidedowntriangle"
 
 // David's hotspot
 //#define WLAN_SSID     "sixShooter"  
@@ -79,22 +85,19 @@ Adafruit_CC3000 cc3000 = Adafruit_CC3000(ADAFRUIT_CC3000_CS, ADAFRUIT_CC3000_IRQ
 //#define WLAN_SSID     "GA-GUEST"  
 //#define WLAN_PASS     "yellowpencil"
 
-// david's house
-//#define WLAN_SSID     "net77"  
-//#define WLAN_PASS     "3236545454"
-
 // Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2
 #define WLAN_SECURITY   WLAN_SEC_WPA2
+////////////////////////////////////////////////////////////
 
 #define LISTEN_PORT           80      // What TCP port to listen on for connections.  
                                       // The HTTP protocol uses port 80 by default.
 
-#define MAX_ACTION            10      // Maximum length of the HTTP action that can be parsed.
+#define MAX_ACTION            4      // Maximum length of the HTTP action that can be parsed.
 
-#define MAX_PATH              64      // Maximum length of the HTTP request path that can be parsed.
+#define MAX_PATH              10      // Maximum length of the HTTP request path that can be parsed.        // Dec. 1st changed from 64 to 10 cuz that's all we need
                                       // There isn't much memory available so keep this short!
 
-#define BUFFER_SIZE           MAX_ACTION + MAX_PATH + 20  // Size of buffer for incoming request data.
+#define BUFFER_SIZE           MAX_ACTION + MAX_PATH + 10  // Size of buffer for incoming request data.
                                                           // Since only the first line is parsed this
                                                           // needs to be as large as the maximum action
                                                           // and path plus a little for whitespace and
@@ -132,7 +135,7 @@ const int MC4=A2;
 
 void left_forward(int rate)
 {
-  Serial.println(F("left forward"));
+  Serial.print(F("left forward: ")); Serial.println(rate);
 
   digitalWrite(EN1, LOW);
   digitalWrite(MC1, HIGH);
@@ -142,7 +145,7 @@ void left_forward(int rate)
 
 void right_forward(int rate)
 {
-  Serial.println(F("right forward"));
+  Serial.print(F("right forward: ")); Serial.println(rate);
 
   digitalWrite(EN2, LOW);
   digitalWrite(MC3, HIGH);
@@ -152,7 +155,7 @@ void right_forward(int rate)
 
 void left_reverse(int rate)
 {
-  Serial.println(F("left reverse"));
+  Serial.print(F("left reverse: ")); Serial.println(rate);
 
   digitalWrite(EN1, LOW);
   digitalWrite(MC1, LOW);
@@ -162,7 +165,7 @@ void left_reverse(int rate)
 
 void right_reverse(int rate)
 {
-  Serial.println(F("right reverse"));
+  Serial.print(F("right reverse: ")); Serial.println(rate);
 
   digitalWrite(EN2, LOW);
   digitalWrite(MC3, LOW);
@@ -278,7 +281,7 @@ void loop(void)
 
     // Handle the request if it was parsed.
     if (parsed) { 
-      Serial.println(F("Processing request"));
+    //  Serial.println(F("Processing request"));
       Serial.print(F("Action: ")); Serial.println(action);
       Serial.print(F("Path: ")); Serial.println(path);
       // Check the action to see if it was a GET request.
@@ -290,15 +293,15 @@ void loop(void)
         // the connection will not be held open.
         client.fastrprintln(F("Content-Type: text/plain"));
         client.fastrprintln(F("Connection: close"));
-        client.fastrprintln(F("Server: Adafruit CC3000"));
-        client.fastrprintln(F("Access-Control-Allow-Origin:*"));
+        //client.fastrprintln(F("Server: Adafruit CC3000"));                    // Dec. 1st commented this out cuz it's unnecessary
+        client.fastrprintln(F("Access-Control-Allow-Origin:*"));                // this header gets around the cross-origin policy
         // Send an empty line to signal start of body.
         client.fastrprintln(F(""));
         // Now send the response data.
          
         ////////////////// MOTOR LOOP ///////////////////
 
-        // convert path from a char array to a string
+        // convert the path in the http request from a char array to a string
         String path_str = String(path);
         
         // decode the path
@@ -308,25 +311,23 @@ void loop(void)
         int right_speed = path_str.substring(6,9).toInt();
   
         // set the speed of the left motor
-        if (left_speed == 0) {
+        if (left_speed == 0) 
           left_brake();
-        } else {
-          if (left_dir == 0) {
+        else {
+          if (left_dir == 0) 
             left_reverse(left_speed);
-          } else {
+          else 
             left_forward(left_speed);
-          }
         }
     
         // set the speed of the right motor
-        if (right_speed == 0) {
+        if (right_speed == 0) 
           right_brake();
-        } else {
-          if (right_dir == 0) {
+        else {
+          if (right_dir == 0)
             right_reverse(right_speed);
-          } else {
+          else 
             right_forward(right_speed);
-          }
         }
        
         // echo the path back
@@ -347,7 +348,8 @@ void loop(void)
     delay(100);
 
     // Close the connection when done.
-    Serial.println(F("Client disconnected"));
+    Serial.println(F("Client disconnected."));
+    Serial.println(F(""));
     client.close();
   }
 }
